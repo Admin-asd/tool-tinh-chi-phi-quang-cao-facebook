@@ -1,0 +1,603 @@
+<!doctype html>
+<!-- Vị trí file: wp-content/gb-tools/calculators/cong-cu-tinh-chi-phi-quang-cao-facebook.html -->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Công cụ Tính Chi Phí Quảng Cáo Facebook online - Facebook Ads Calculator</title>
+<meta name="description" content="Ước tính ngân sách, phạm vi tiếp cận, lượt nhấp, lượt chuyển đổi, CPM, CPC, CPA và điểm chuẩn ngành cho chiến dịch quảng cáo Facebook & Instagram.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.1.11"></script>
+<style type="text/tailwindcss">
+  @theme {
+    --font-sans: Roboto, ui-sans-serif, system-ui, sans-serif;
+    --color-primary: #fdca1e; --color-primary-hover: #e8b008; --color-primary-soft: #fffbeb;
+    --color-primary-ink: #9c6406; --color-ink: #0f172a; --color-neutral: #e2e8f0;
+  }
+</style>
+</head>
+<body class="bg-white font-sans text-ink antialiased">
+<main class="mx-auto max-w-4xl p-4 sm:p-6 space-y-6">
+
+  <!-- 1. Các nút Ví dụ nhanh (Preset pills) -->
+  <div class="flex flex-wrap items-center gap-2.5">
+    <button type="button" onclick="applyPreset('small_biz')" class="rounded-full border border-amber-300 bg-primary-soft hover:bg-primary px-4 py-2 text-xs font-bold text-primary-ink hover:text-ink transition-colors cursor-pointer">
+      Doanh nghiệp nhỏ
+    </button>
+    <button type="button" onclick="applyPreset('ecom_launch')" class="rounded-full border border-amber-300 bg-primary-soft hover:bg-primary px-4 py-2 text-xs font-bold text-primary-ink hover:text-ink transition-colors cursor-pointer">
+      Ra mắt Thương mại điện tử
+    </button>
+    <button type="button" onclick="applyPreset('lead_gen')" class="rounded-full border border-amber-300 bg-primary-soft hover:bg-primary px-4 py-2 text-xs font-bold text-primary-ink hover:text-ink transition-colors cursor-pointer">
+      Chiến dịch tìm Khách hàng tiềm năng
+    </button>
+    <button type="button" onclick="applyPreset('brand_awareness')" class="rounded-full border border-amber-300 bg-primary-soft hover:bg-primary px-4 py-2 text-xs font-bold text-primary-ink hover:text-ink transition-colors cursor-pointer">
+      Nhận thức về thương hiệu
+    </button>
+  </div>
+
+  <!-- 2. Khung Nhập liệu & Cấu hình chiến dịch -->
+  <div class="bg-white border border-neutral rounded-2xl p-6 shadow-xs space-y-6">
+    
+    <!-- Phần 1: NGÂN SÁCH & THỜI GIAN -->
+    <div class="space-y-4">
+      <div class="text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-neutral pb-2">
+        NGÂN SÁCH &amp; THỜI GIAN
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- Ngân sách hàng ngày -->
+        <div class="space-y-1.5">
+          <label for="dailyBudget" class="block text-xs font-bold text-ink">Ngân sách hàng ngày</label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-sm font-mono font-bold text-slate-400">$</span>
+            <input type="number" id="dailyBudget" min="1" step="any" placeholder="ví dụ: 25" class="w-full rounded-xl border border-neutral pl-8 pr-3.5 py-3 text-sm font-mono font-bold text-ink outline-none focus:border-primary bg-white">
+          </div>
+        </div>
+
+        <!-- Thời gian chiến dịch (ngày) -->
+        <div class="space-y-2">
+          <label for="durationDays" class="block text-xs font-bold text-ink">Thời gian chiến dịch (ngày)</label>
+          <input type="number" id="durationDays" min="1" max="365" step="1" placeholder="ví dụ: 30" class="w-full rounded-xl border border-neutral px-3.5 py-3 text-sm font-mono font-bold text-ink outline-none focus:border-primary bg-white">
+          <div class="flex flex-wrap items-center gap-1.5 pt-0.5">
+            <button type="button" onclick="setDays(7)" class="px-2.5 py-1 rounded-lg border border-neutral bg-slate-50 hover:border-primary hover:bg-primary-soft text-xs font-semibold text-slate-600 hover:text-ink cursor-pointer">7 ngày</button>
+            <button type="button" onclick="setDays(14)" class="px-2.5 py-1 rounded-lg border border-neutral bg-slate-50 hover:border-primary hover:bg-primary-soft text-xs font-semibold text-slate-600 hover:text-ink cursor-pointer">14 ngày</button>
+            <button type="button" onclick="setDays(30)" class="px-2.5 py-1 rounded-lg border border-neutral bg-slate-50 hover:border-primary hover:bg-primary-soft text-xs font-semibold text-slate-600 hover:text-ink cursor-pointer">30 ngày</button>
+            <button type="button" onclick="setDays(60)" class="px-2.5 py-1 rounded-lg border border-neutral bg-slate-50 hover:border-primary hover:bg-primary-soft text-xs font-semibold text-slate-600 hover:text-ink cursor-pointer">60 ngày</button>
+            <button type="button" onclick="setDays(90)" class="px-2.5 py-1 rounded-lg border border-neutral bg-slate-50 hover:border-primary hover:bg-primary-soft text-xs font-semibold text-slate-600 hover:text-ink cursor-pointer">90 ngày</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phần 2: CÀI ĐẶT CHIẾN DỊCH -->
+    <div class="space-y-4">
+      <div class="text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-neutral pb-2">
+        CÀI ĐẶT CHIẾN DỊCH
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- Mục tiêu chiến dịch -->
+        <div class="space-y-1.5">
+          <label for="campaignObjective" class="block text-xs font-bold text-ink">Mục tiêu chiến dịch</label>
+          <select id="campaignObjective" class="w-full rounded-xl border border-neutral p-3 text-sm font-medium text-ink outline-none focus:border-primary bg-white cursor-pointer">
+            <option value="awareness">Nhận thức về thương hiệu</option>
+            <option value="traffic" selected>Lưu lượng truy cập</option>
+            <option value="engagement">Tương tác</option>
+            <option value="leads">Tìm kiếm khách hàng tiềm năng</option>
+            <option value="app">Số lượt cài đặt ứng dụng</option>
+            <option value="sales">Doanh số / Chuyển đổi</option>
+          </select>
+        </div>
+
+        <!-- Ngành hàng -->
+        <div class="space-y-1.5">
+          <label for="industrySelect" class="block text-xs font-bold text-ink">Ngành hàng</label>
+          <select id="industrySelect" class="w-full rounded-xl border border-neutral p-3 text-sm font-medium text-ink outline-none focus:border-primary bg-white cursor-pointer">
+            <option value="apparel">May mặc &amp; Thời trang</option>
+            <option value="auto">Ô tô</option>
+            <option value="b2b">B2B</option>
+            <option value="beauty">Làm đẹp &amp; Chăm sóc cá nhân</option>
+            <option value="education">Giáo dục</option>
+            <option value="ecommerce" selected>Thương mại điện tử</option>
+            <option value="finance">Tài chính &amp; Bảo hiểm</option>
+            <option value="fitness">Thể hình &amp; Sức khỏe</option>
+            <option value="food">Thực phẩm &amp; Đồ uống</option>
+            <option value="gaming">Trò chơi</option>
+            <option value="healthcare">Y tế</option>
+            <option value="home">Cải thiện nhà cửa</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phần 3: ĐỐI TƯỢNG & VỊ TRÍ QUẢNG CÁO -->
+    <div class="space-y-4">
+      <div class="text-xs font-bold uppercase tracking-wider text-slate-500 border-b border-neutral pb-2">
+        ĐỐI TƯỢNG &amp; VỊ TRÍ QUẢNG CÁO
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- Quy mô đối tượng mục tiêu -->
+        <div class="space-y-1.5">
+          <label for="audienceSize" class="block text-xs font-bold text-ink">Quy mô đối tượng mục tiêu</label>
+          <input type="number" id="audienceSize" min="1000" step="1000" placeholder="ví dụ: 500,000" class="w-full rounded-xl border border-neutral px-3.5 py-3 text-sm font-mono font-bold text-ink outline-none focus:border-primary bg-white">
+        </div>
+
+        <!-- Vị trí quảng cáo -->
+        <div class="space-y-1.5">
+          <label for="adPlacement" class="block text-xs font-bold text-ink">Vị trí quảng cáo</label>
+          <select id="adPlacement" class="w-full rounded-xl border border-neutral p-3 text-sm font-medium text-ink outline-none focus:border-primary bg-white cursor-pointer">
+            <option value="advantage" selected>Tất cả vị trí quảng cáo (Advantage+)</option>
+            <option value="fb_feed">Bảng tin Facebook</option>
+            <option value="ig_feed">Bảng tin Instagram</option>
+            <option value="stories">Tin (Stories)</option>
+            <option value="reels">Reels</option>
+            <option value="audience_network">Audience Network</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Nút Tính toán Chi phí Quảng cáo -->
+    <button type="button" onclick="calculateFacebookAds()" class="w-full min-h-12 rounded-xl bg-primary px-6 font-bold text-sm text-ink hover:bg-primary-hover shadow-xs cursor-pointer transition-colors">
+      Tính toán Chi phí Quảng cáo
+    </button>
+
+  </div>
+
+  <!-- 3. KHU VỰC KẾT QUẢ PHÂN TÍCH (Ẩn trước khi tính) -->
+  <div id="resultsSection" class="space-y-6 hidden">
+
+    <!-- 4 Thẻ chỉ số tổng quan -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-white border border-neutral border-l-4 border-l-primary rounded-2xl p-4 shadow-2xs space-y-1">
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500">TỔNG NGÂN SÁCH</div>
+        <div id="resTotalBudget" class="text-2xl font-mono font-bold text-primary-ink">$700.00</div>
+        <div id="resBudgetSub" class="text-xs text-slate-500">$100.00/ngày &times; 7 ngày</div>
+      </div>
+
+      <div class="bg-white border border-neutral border-l-4 border-l-emerald-500 rounded-2xl p-4 shadow-2xs space-y-1">
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500">TIẾP CẬN DỰ KIẾN</div>
+        <div id="resEstReach" class="text-2xl font-mono font-bold text-emerald-700">80.9K</div>
+        <div id="resReachPct" class="text-xs text-slate-500">1.62% của đối tượng</div>
+      </div>
+
+      <div class="bg-white border border-neutral border-l-4 border-l-amber-500 rounded-2xl p-4 shadow-2xs space-y-1">
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500">LƯỢT NHẤP DỰ KIẾN</div>
+        <div id="resEstClicks" class="text-2xl font-mono font-bold text-amber-600">1.2K</div>
+        <div id="resClicksPerDay" class="text-xs text-slate-500">176 lượt nhấp/ngày</div>
+      </div>
+
+      <div class="bg-white border border-neutral border-l-4 border-l-rose-500 rounded-2xl p-4 shadow-2xs space-y-1">
+        <div class="text-[11px] font-bold uppercase tracking-wider text-slate-500">CHUYỂN ĐỔI DỰ KIẾN</div>
+        <div id="resEstConversions" class="text-2xl font-mono font-bold text-rose-600">30</div>
+        <div id="resCpaSub" class="text-xs text-slate-500">$20.15 mỗi chuyển đổi</div>
+      </div>
+    </div>
+
+    <!-- Thanh tóm tắt 5 chỉ số kỹ thuật -->
+    <div class="bg-white border border-neutral rounded-2xl p-5 shadow-2xs grid grid-cols-2 sm:grid-cols-5 divide-y sm:divide-y-0 sm:divide-x divide-neutral text-center gap-y-4 sm:gap-y-0">
+      <div class="px-2">
+        <div class="text-[11px] font-bold uppercase text-slate-400">CPM</div>
+        <div id="metricCPM" class="text-lg font-mono font-bold text-ink mt-0.5">$5.62</div>
+      </div>
+      <div class="px-2">
+        <div class="text-[11px] font-bold uppercase text-slate-400">CPC</div>
+        <div id="metricCPC" class="text-lg font-mono font-bold text-ink mt-0.5">$0.50</div>
+      </div>
+      <div class="px-2">
+        <div class="text-[11px] font-bold uppercase text-slate-400">CTR</div>
+        <div id="metricCTR" class="text-lg font-mono font-bold text-ink mt-0.5">0.99%</div>
+      </div>
+      <div class="px-2">
+        <div class="text-[11px] font-bold uppercase text-slate-400">CPA</div>
+        <div id="metricCPA" class="text-lg font-mono font-bold text-ink mt-0.5">$20.15</div>
+      </div>
+      <div class="px-2 col-span-2 sm:col-span-1">
+        <div class="text-[11px] font-bold uppercase text-slate-400">TẦN SUẤT</div>
+        <div id="metricFreq" class="text-lg font-mono font-bold text-ink mt-0.5">1.5x</div>
+      </div>
+    </div>
+
+    <!-- Phễu Hiệu suất Chiến dịch -->
+    <div class="bg-white border border-neutral rounded-2xl p-6 shadow-xs space-y-5">
+      <div class="font-bold text-base text-ink">Phễu Hiệu suất Chiến dịch</div>
+      <div class="grid grid-cols-1 sm:grid-cols-5 items-center gap-4 text-center">
+        <div class="space-y-2">
+          <div id="funnelImpressions" class="text-xl font-mono font-bold text-ink">124.5K</div>
+          <div class="text-[11px] font-bold uppercase text-slate-400">LƯỢT HIỂN THỊ</div>
+          <div class="h-1.5 w-full rounded-full bg-primary"></div>
+        </div>
+
+        <div class="space-y-1">
+          <div id="funnelCtrLabel" class="text-xs font-mono font-bold text-primary-ink">0.99% CTR</div>
+          <div class="text-primary-ink font-bold">&rarr;</div>
+        </div>
+
+        <div class="space-y-2">
+          <div id="funnelClicks" class="text-xl font-mono font-bold text-ink">1.2K</div>
+          <div class="text-[11px] font-bold uppercase text-slate-400">LƯỢT NHẤP</div>
+          <div class="h-1.5 w-2/3 mx-auto rounded-full bg-emerald-500"></div>
+        </div>
+
+        <div class="space-y-1">
+          <div id="funnelCvrLabel" class="text-xs font-mono font-bold text-primary-ink">2.47% CVR</div>
+          <div class="text-primary-ink font-bold">&rarr;</div>
+        </div>
+
+        <div class="space-y-2">
+          <div id="funnelConversions" class="text-xl font-mono font-bold text-ink">30</div>
+          <div class="text-[11px] font-bold uppercase text-slate-400">CHUYỂN ĐỔI</div>
+          <div class="h-1.5 w-1/3 mx-auto rounded-full bg-rose-500"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dự báo Chiến dịch (Bảng theo thời gian) -->
+    <div class="bg-white border border-neutral rounded-2xl p-6 shadow-xs space-y-4">
+      <div class="font-bold text-base text-ink">Dự báo Chiến dịch</div>
+      <div class="border border-neutral rounded-xl overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="border-b border-neutral bg-slate-50 text-[11px] font-bold uppercase text-slate-500">
+              <th class="py-3 px-4">CHỈ SỐ</th>
+              <th class="py-3 px-4 text-right">HÀNG NGÀY</th>
+              <th class="py-3 px-4 text-right">HÀNG TUẦN</th>
+              <th class="py-3 px-4 text-right">HÀNG THÁNG</th>
+              <th id="thTotalDays" class="py-3 px-4 text-right text-primary-ink">TỔNG CỘNG (7NG)</th>
+            </tr>
+          </thead>
+          <tbody id="forecastTableBody" class="divide-y divide-neutral font-mono">
+            <!-- Render JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Điểm chuẩn Ngành -->
+    <div class="bg-white border border-neutral rounded-2xl p-6 shadow-xs space-y-5">
+      <div id="benchmarkHeader" class="font-bold text-base text-ink">Điểm chuẩn Ngành: Thương mại điện tử</div>
+      
+      <div class="space-y-4 text-xs">
+        <!-- Thanh CPM -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-ink">CPM</span>
+            <span id="benchCpmText" class="font-mono"><strong class="text-ink">$5.62</strong> <span class="text-slate-400">so với TB $9.22</span></span>
+          </div>
+          <div class="relative h-2.5 w-full rounded-full bg-slate-100">
+            <div id="barCpm" class="h-full rounded-full bg-emerald-500 transition-all" style="width: 35%"></div>
+            <div id="markerCpm" class="absolute top-[-3px] bottom-[-3px] w-0.5 bg-slate-700" style="left: 55%"></div>
+          </div>
+        </div>
+
+        <!-- Thanh CPC -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-ink">CPC</span>
+            <span id="benchCpcText" class="font-mono"><strong class="text-ink">$0.50</strong> <span class="text-slate-400">so với TB $0.90</span></span>
+          </div>
+          <div class="relative h-2.5 w-full rounded-full bg-slate-100">
+            <div id="barCpc" class="h-full rounded-full bg-emerald-500 transition-all" style="width: 30%"></div>
+            <div id="markerCpc" class="absolute top-[-3px] bottom-[-3px] w-0.5 bg-slate-700" style="left: 55%"></div>
+          </div>
+        </div>
+
+        <!-- Thanh CTR -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-ink">CTR</span>
+            <span id="benchCtrText" class="font-mono"><strong class="text-ink">0.99%</strong> <span class="text-slate-400">so với TB 0.94%</span></span>
+          </div>
+          <div class="relative h-2.5 w-full rounded-full bg-slate-100">
+            <div id="barCtr" class="h-full rounded-full bg-emerald-500 transition-all" style="width: 58%"></div>
+            <div id="markerCtr" class="absolute top-[-3px] bottom-[-3px] w-0.5 bg-slate-700" style="left: 55%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-4 text-[11px] text-slate-500 pt-1">
+        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-slate-700"></span> Chiến dịch của bạn</span>
+        <span class="text-slate-300">|</span>
+        <span>Trung bình toàn ngành</span>
+        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Tốt hơn trung bình</span>
+        <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-rose-500"></span> Cao hơn trung bình</span>
+      </div>
+    </div>
+
+    <!-- Cấu hình Chiến dịch -->
+    <div class="bg-white border border-neutral rounded-2xl p-6 shadow-xs space-y-4">
+      <div class="font-bold text-base text-ink">Cấu hình Chiến dịch</div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+        <div class="rounded-xl bg-slate-50 border border-neutral p-3.5 space-y-1">
+          <div class="text-[10px] font-bold uppercase text-slate-400">MỤC TIÊU</div>
+          <div id="cfgObjective" class="font-bold text-sm text-ink">Lưu lượng truy cập</div>
+        </div>
+        <div class="rounded-xl bg-slate-50 border border-neutral p-3.5 space-y-1">
+          <div class="text-[10px] font-bold uppercase text-slate-400">NGÀNH HÀNG</div>
+          <div id="cfgIndustry" class="font-bold text-sm text-ink">Thương mại điện tử</div>
+        </div>
+        <div class="rounded-xl bg-slate-50 border border-neutral p-3.5 space-y-1">
+          <div class="text-[10px] font-bold uppercase text-slate-400">VỊ TRÍ</div>
+          <div id="cfgPlacement" class="font-bold text-sm text-ink">Tất cả vị trí quảng cáo (Advantage+)</div>
+        </div>
+        <div class="rounded-xl bg-slate-50 border border-neutral p-3.5 space-y-1">
+          <div class="text-[10px] font-bold uppercase text-slate-400">QUY MÔ ĐỐI TƯỢNG</div>
+          <div id="cfgAudience" class="font-bold text-sm text-ink">500.0K</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mẹo Tối ưu hóa động -->
+    <div class="bg-white border border-neutral rounded-2xl p-6 shadow-xs space-y-4">
+      <div id="tipsHeader" class="font-bold text-base text-ink">Mẹo Tối ưu hóa cho Lưu lượng truy cập</div>
+      <div id="tipsList" class="space-y-3 text-xs text-slate-700">
+        <!-- Render JS -->
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<script>
+  // Dữ liệu điểm chuẩn ngành (CPM USD, CPC USD, CTR %, CVR %)
+  const INDUSTRY_BENCHMARKS = {
+    apparel:    { name: 'May mặc & Thời trang',      cpm: 9.22,  cpc: 0.90, ctr: 0.94, cvr: 2.47 },
+    auto:       { name: 'Ô tô',                      cpm: 11.50, cpc: 1.45, ctr: 0.80, cvr: 2.10 },
+    b2b:        { name: 'B2B',                       cpm: 14.80, cpc: 1.85, ctr: 0.78, cvr: 3.10 },
+    beauty:     { name: 'Làm đẹp & Chăm sóc cá nhân',cpm: 10.40, cpc: 0.95, ctr: 1.09, cvr: 2.85 },
+    education:  { name: 'Giáo dục',                  cpm: 11.20, cpc: 1.15, ctr: 0.97, cvr: 3.40 },
+    ecommerce:  { name: 'Thương mại điện tử',        cpm: 10.80, cpc: 0.88, ctr: 1.22, cvr: 2.65 },
+    finance:    { name: 'Tài chính & Bảo hiểm',      cpm: 16.50, cpc: 2.15, ctr: 0.76, cvr: 2.30 },
+    fitness:    { name: 'Thể hình & Sức khỏe',       cpm: 11.00, cpc: 1.05, ctr: 1.04, cvr: 2.90 },
+    food:       { name: 'Thực phẩm & Đồ uống',       cpm: 8.60,  cpc: 0.75, ctr: 1.14, cvr: 2.75 },
+    gaming:     { name: 'Trò chơi',                  cpm: 7.90,  cpc: 0.65, ctr: 1.21, cvr: 3.20 },
+    healthcare: { name: 'Y tế',                      cpm: 13.40, cpc: 1.35, ctr: 0.99, cvr: 2.60 },
+    home:       { name: 'Cải thiện nhà cửa',         cpm: 12.10, cpc: 1.25, ctr: 0.96, cvr: 2.40 }
+  };
+
+  // Hệ số điều chỉnh theo mục tiêu chiến dịch
+  const OBJECTIVE_MODIFIERS = {
+    awareness:  { name: 'Nhận diện Thương hiệu',          cpmMult: 0.61, ctrMult: 1.05, cvrMult: 1.00 },
+    traffic:    { name: 'Lưu lượng truy cập',            cpmMult: 0.85, ctrMult: 1.25, cvrMult: 0.85 },
+    engagement: { name: 'Tương tác',                     cpmMult: 0.75, ctrMult: 1.15, cvrMult: 0.75 },
+    leads:      { name: 'Tìm kiếm khách hàng tiềm năng', cpmMult: 1.15, ctrMult: 0.95, cvrMult: 1.45 },
+    app:        { name: 'Số lượt cài đặt ứng dụng',      cpmMult: 1.05, ctrMult: 1.10, cvrMult: 1.35 },
+    sales:      { name: 'Doanh số / Chuyển đổi',         cpmMult: 1.25, ctrMult: 0.92, cvrMult: 1.30 }
+  };
+
+  // Hệ số điều chỉnh theo vị trí hiển thị
+  const PLACEMENT_MODIFIERS = {
+    advantage:        { name: 'Tất cả vị trí quảng cáo (Advantage+)', cpmMult: 1.00, ctrMult: 1.00 },
+    fb_feed:          { name: 'Bảng tin Facebook',                    cpmMult: 1.12, ctrMult: 1.08 },
+    ig_feed:          { name: 'Bảng tin Instagram',                   cpmMult: 1.18, ctrMult: 1.04 },
+    stories:          { name: 'Tin (Stories)',                        cpmMult: 0.88, ctrMult: 0.92 },
+    reels:            { name: 'Reels',                                cpmMult: 0.82, ctrMult: 0.96 },
+    audience_network: { name: 'Audience Network',                     cpmMult: 0.55, ctrMult: 0.70 }
+  };
+
+  // Mẹo tối ưu hóa theo mục tiêu
+  const OBJECTIVE_TIPS = {
+    awareness: [
+      'Sử dụng quảng cáo video ngắn (6–15 giây) cho các chiến dịch nhận diện — chúng thường đạt được CPM thấp hơn 20–30% so với hình ảnh tĩnh.',
+      'Nhắm mục tiêu đối tượng rộng (1 triệu+) để tối đa hóa hiệu quả tiếp cận. Nhắm mục tiêu quá hẹp làm tăng CPM đáng kể.',
+      'Đặt giới hạn tần suất thành 2–3 lần mỗi tuần để tránh gây nhàm chán quảng cáo trong khi vẫn duy trì độ nhận diện thương hiệu.'
+    ],
+    traffic: [
+      'Tối ưu hóa tốc độ tải trang đích (dưới 3 giây) để giảm tỷ lệ thoát sau khi người dùng nhấp vào quảng cáo.',
+      'Sử dụng định dạng quảng cáo quay vòng (Carousel) hoặc hình ảnh có nút kêu gọi hành động (CTA) rõ ràng để cải thiện CTR từ 15–25%.',
+      'Bật tất cả vị trí quảng cáo (Advantage+) để thuật toán Meta tự động phân bổ ngân sách vào nơi có CPC rẻ nhất.'
+    ],
+    engagement: [
+      'Đặt câu hỏi mở hoặc tạo nội dung thảo luận ở 2 dòng đầu tiên của bài viết để kích thích bình luận và chia sẻ tự nhiên.',
+      'Tận dụng bài viết có sẵn nhiều tương tác (Social Proof) khi chạy quảng cáo để giảm chi phí mỗi lượt tương tác.',
+      'Kiểm tra định dạng Reels và Tin (Stories) với khung hình dọc 9:16 để tăng tỷ lệ giữ chân người xem.'
+    ],
+    leads: [
+      'Sử dụng biểu mẫu tức thì (Instant Forms) ngay trên Facebook/Instagram để rút ngắn thao tác điền thông tin trên di động.',
+      'Thêm 1–2 câu hỏi lọc chất lượng khách hàng trong biểu mẫu để tăng tỷ lệ chốt đơn thực tế của đội ngũ bán hàng.',
+      'Cài đặt kết nối CRM hoặc thông báo tự động để liên hệ lại với khách hàng tiềm năng trong vòng 5 phút đầu tiên.'
+    ],
+    app: [
+      'Tích hợp Facebook SDK và sự kiện ứng dụng (App Events) để tối ưu hóa chiến dịch theo người dùng có hành động giá trị sau cài đặt.',
+      'Sử dụng video trình diễn trải nghiệm thực tế của ứng dụng trong 5 giây đầu để tăng tỷ lệ nhấp cài đặt.',
+      'Tách riêng chiến dịch theo hệ điều hành iOS và Android để kiểm soát chính xác giá thầu CPI từng nền tảng.'
+    ],
+    sales: [
+      'Cài đặt đầy đủ Meta Pixel kết hợp Conversions API (CAPI) để đo lường chính xác đơn hàng và hỗ trợ máy học tối ưu.',
+      'Kết hợp chiến dịch tìm khách hàng mới (Prospecting) với chiến dịch tiếp thị lại (Retargeting) những người đã thêm vào giỏ hàng.',
+      'Sử dụng quảng cáo danh mục sản phẩm động (Advantage+ Catalog Ads) để tự động hiển thị đúng sản phẩm người dùng từng xem.'
+    ]
+  };
+
+  function formatCompact(num) {
+    if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+    if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+    return Math.round(num).toLocaleString('en-US');
+  }
+
+  function setDays(d) {
+    document.getElementById('durationDays').value = d;
+  }
+
+  function applyPreset(type) {
+    if (type === 'small_biz') {
+      document.getElementById('dailyBudget').value = 25;
+      document.getElementById('durationDays').value = 30;
+      document.getElementById('campaignObjective').value = 'traffic';
+      document.getElementById('industrySelect').value = 'food';
+      document.getElementById('audienceSize').value = 250000;
+      document.getElementById('adPlacement').value = 'advantage';
+    } else if (type === 'ecom_launch') {
+      document.getElementById('dailyBudget').value = 100;
+      document.getElementById('durationDays').value = 14;
+      document.getElementById('campaignObjective').value = 'sales';
+      document.getElementById('industrySelect').value = 'ecommerce';
+      document.getElementById('audienceSize').value = 1500000;
+      document.getElementById('adPlacement').value = 'advantage';
+    } else if (type === 'lead_gen') {
+      document.getElementById('dailyBudget').value = 50;
+      document.getElementById('durationDays').value = 30;
+      document.getElementById('campaignObjective').value = 'leads';
+      document.getElementById('industrySelect').value = 'education';
+      document.getElementById('audienceSize').value = 600000;
+      document.getElementById('adPlacement').value = 'fb_feed';
+    } else if (type === 'brand_awareness') {
+      document.getElementById('dailyBudget').value = 100;
+      document.getElementById('durationDays').value = 7;
+      document.getElementById('campaignObjective').value = 'awareness';
+      document.getElementById('industrySelect').value = 'apparel';
+      document.getElementById('audienceSize').value = 5000000;
+      document.getElementById('adPlacement').value = 'advantage';
+    }
+    calculateFacebookAds();
+  }
+
+  function calculateFacebookAds() {
+    const dailyBudget = parseFloat(document.getElementById('dailyBudget').value) || 25;
+    const days = Math.min(365, Math.max(1, parseInt(document.getElementById('durationDays').value, 10) || 30));
+    const objKey = document.getElementById('campaignObjective').value;
+    const indKey = document.getElementById('industrySelect').value;
+    const audience = Math.max(1000, parseFloat(document.getElementById('audienceSize').value) || 500000);
+    const placeKey = document.getElementById('adPlacement').value;
+
+    // Điền giá trị mặc định nếu ô đang trống
+    if (!document.getElementById('dailyBudget').value) document.getElementById('dailyBudget').value = dailyBudget;
+    if (!document.getElementById('durationDays').value) document.getElementById('durationDays').value = days;
+    if (!document.getElementById('audienceSize').value) document.getElementById('audienceSize').value = audience;
+
+    const bench = INDUSTRY_BENCHMARKS[indKey];
+    const objMod = OBJECTIVE_MODIFIERS[objKey];
+    const placeMod = PLACEMENT_MODIFIERS[placeKey];
+
+    // Tính chỉ số dự kiến
+    const estCPM = bench.cpm * objMod.cpmMult * placeMod.cpmMult;
+    const estCTR = bench.ctr * objMod.ctrMult * placeMod.ctrMult;
+    const estCPC = estCPM / (estCTR * 10);
+    const estCVR = bench.cvr * objMod.cvrMult;
+
+    const totalBudget = dailyBudget * days;
+    const totalImpressions = (totalBudget / estCPM) * 1000;
+    const totalClicks = totalImpressions * (estCTR / 100);
+    const totalConversions = Math.max(1, Math.round(totalClicks * (estCVR / 100)));
+    const estCPA = totalBudget / totalConversions;
+
+    // Tần suất & Tiếp cận
+    const rawFreq = 1.2 + Math.min(2.8, (totalImpressions / audience) * 1.5);
+    const frequency = Number(rawFreq.toFixed(1));
+    const estReach = Math.min(audience * 0.85, totalImpressions / frequency);
+    const reachPct = ((estReach / audience) * 100).toFixed(2);
+
+    // Cập nhật 4 thẻ tổng quan
+    document.getElementById('resTotalBudget').textContent = `$${totalBudget.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    document.getElementById('resBudgetSub').textContent = `$${dailyBudget.toFixed(2)}/ngày × ${days} ngày`;
+    document.getElementById('resEstReach').textContent = formatCompact(estReach);
+    document.getElementById('resReachPct').textContent = `${reachPct}% của đối tượng`;
+    document.getElementById('resEstClicks').textContent = formatCompact(totalClicks);
+    document.getElementById('resClicksPerDay').textContent = `${Math.round(totalClicks / days).toLocaleString('en-US')} lượt nhấp/ngày`;
+    document.getElementById('resEstConversions').textContent = totalConversions.toLocaleString('en-US');
+    document.getElementById('resCpaSub').textContent = `$${estCPA.toFixed(2)} mỗi chuyển đổi`;
+
+    // Cập nhật thanh 5 chỉ số
+    document.getElementById('metricCPM').textContent = `$${estCPM.toFixed(2)}`;
+    document.getElementById('metricCPC').textContent = `$${estCPC.toFixed(2)}`;
+    document.getElementById('metricCTR').textContent = `${estCTR.toFixed(2)}%`;
+    document.getElementById('metricCPA').textContent = `$${estCPA.toFixed(2)}`;
+    document.getElementById('metricFreq').textContent = `${frequency}x`;
+
+    // Cập nhật Phễu hiệu suất
+    document.getElementById('funnelImpressions').textContent = formatCompact(totalImpressions);
+    document.getElementById('funnelCtrLabel').textContent = `${estCTR.toFixed(2)}% CTR`;
+    document.getElementById('funnelClicks').textContent = formatCompact(totalClicks);
+    document.getElementById('funnelCvrLabel').textContent = `${estCVR.toFixed(2)}% CVR`;
+    document.getElementById('funnelConversions').textContent = totalConversions.toLocaleString('en-US');
+
+    // Cập nhật Bảng dự báo Chiến dịch
+    document.getElementById('thTotalDays').textContent = `TỔNG CỘNG (${days}NG)`;
+    const dailyImp = totalImpressions / days;
+    const dailyClk = totalClicks / days;
+    const dailyConv = totalConversions / days;
+
+    const rows = [
+      {
+        label: 'Chi tiêu',
+        d: `$${dailyBudget.toFixed(2)}`,
+        w: `$${(dailyBudget * 7).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+        m: `$${(dailyBudget * 30).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+        t: `$${totalBudget.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+      },
+      {
+        label: 'Lượt hiển thị',
+        d: formatCompact(dailyImp),
+        w: formatCompact(dailyImp * 7),
+        m: formatCompact(dailyImp * 30),
+        t: formatCompact(totalImpressions)
+      },
+      {
+        label: 'Lượt nhấp',
+        d: Math.round(dailyClk).toLocaleString('en-US'),
+        w: formatCompact(dailyClk * 7),
+        m: formatCompact(dailyClk * 30),
+        t: formatCompact(totalClicks)
+      },
+      {
+        label: 'Chuyển đổi',
+        d: Math.max(1, Math.round(dailyConv)).toLocaleString('en-US'),
+        w: Math.round(dailyConv * 7).toLocaleString('en-US'),
+        m: Math.round(dailyConv * 30).toLocaleString('en-US'),
+        t: totalConversions.toLocaleString('en-US')
+      }
+    ];
+
+    const tbody = document.getElementById('forecastTableBody');
+    tbody.innerHTML = rows.map(r => `
+      <tr class="hover:bg-slate-50/70">
+        <td class="py-3 px-4 font-sans font-bold text-ink">${r.label}</td>
+        <td class="py-3 px-4 text-right text-slate-600">${r.d}</td>
+        <td class="py-3 px-4 text-right text-slate-600">${r.w}</td>
+        <td class="py-3 px-4 text-right text-slate-600">${r.m}</td>
+        <td class="py-3 px-4 text-right font-bold text-primary-ink">${r.t}</td>
+      </tr>
+    `).join('');
+
+    // Cập nhật Điểm chuẩn Ngành
+    document.getElementById('benchmarkHeader').textContent = `Điểm chuẩn Ngành: ${bench.name}`;
+    updateBenchmarkBar('Cpm', estCPM, bench.cpm, '$', '', true);
+    updateBenchmarkBar('Cpc', estCPC, bench.cpc, '$', '', true);
+    updateBenchmarkBar('Ctr', estCTR, bench.ctr, '', '%', false);
+
+    // Cập nhật Cấu hình Chiến dịch
+    document.getElementById('cfgObjective').textContent = objMod.name;
+    document.getElementById('cfgIndustry').textContent = bench.name;
+    document.getElementById('cfgPlacement').textContent = placeMod.name;
+    document.getElementById('cfgAudience').textContent = formatCompact(audience);
+
+    // Cập nhật Mẹo tối ưu hóa
+    document.getElementById('tipsHeader').textContent = `Mẹo Tối ưu hóa cho ${objMod.name}`;
+    const tips = OBJECTIVE_TIPS[objKey] || OBJECTIVE_TIPS.traffic;
+    document.getElementById('tipsList').innerHTML = tips.map(tip => `
+      <div class="rounded-xl border border-emerald-200 bg-emerald-50/60 border-l-4 border-l-emerald-500 p-3.5 leading-relaxed text-slate-700">
+        ${tip}
+      </div>
+    `).join('');
+
+    document.getElementById('resultsSection').classList.remove('hidden');
+  }
+
+  function updateBenchmarkBar(key, actual, avg, prefix, suffix, lowerIsBetter) {
+    const textEl = document.getElementById('bench' + key + 'Text');
+    const barEl = document.getElementById('bar' + key);
+    textEl.innerHTML = `<strong class="text-ink">${prefix}${actual.toFixed(2)}${suffix}</strong> <span class="text-slate-400">so với TB ${prefix}${avg.toFixed(2)}${suffix}</span>`;
+
+    const ratio = actual / avg;
+    const widthPct = Math.min(95, Math.max(12, ratio * 55));
+    const isBetter = lowerIsBetter ? actual <= avg : actual >= avg;
+
+    barEl.style.width = `${widthPct}%`;
+    barEl.className = `h-full rounded-full transition-all ${isBetter ? 'bg-emerald-500' : 'bg-rose-500'}`;
+  }
+</script>
+</body>
+</html>
